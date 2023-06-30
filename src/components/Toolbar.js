@@ -2,17 +2,12 @@ import React from "react";
 import Button from "@mui/material/Button";
 import InfoIcon from "@mui/icons-material/Info";
 
-const Toolbar = () => {
+const Toolbar = ({ generateMaze }) => {
   return (
     <div className="toolbar">
       <h1 className="title">Dijkstra's Algorithm</h1>
       <div className="btn-container">
-        <Button
-          variant="text"
-          size="large"
-          sx={{ color: "#fff", ":hover": { color: "#aaa" } }}
-          classes=".MuiButton-textSizeLarge"
-        >
+        <Button onClick={() => generateMaze()} variant="text" size="large" sx={{ color: "#fff", ":hover": { color: "#aaa" } }}>
           Generate Maze
         </Button>
         <Button variant="text" size="large" sx={{ color: "#fff", ":hover": { color: "#aaa" } }}>
