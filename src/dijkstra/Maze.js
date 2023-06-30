@@ -6,6 +6,8 @@ class Maze {
   constructor(width, height) {
     this.size = 0;
     this.nodes = [];
+    this.visitedNodes = [];
+    this.unvisitedNodes = [];
     this.mazeState = [];
     let id = 0;
     for (let i = 0; i < Math.ceil(width / nodeLength); i++) {
@@ -19,12 +21,17 @@ class Maze {
     }
   }
 
+  // assigns the wall nodes randomly
   generateWalls() {
     for (let i = 0; i < this.size; i += 3) {
       this.nodes[i].isWall = true;
       this.mazeState[i].isWall = true;
     }
+    return this;
   }
+
+  // assigns the start and the end nodes
+  assignNodes() {}
 }
 
 export default Maze;

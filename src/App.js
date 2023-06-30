@@ -4,22 +4,17 @@ import MazeContainer from "./components/MazeContainer";
 import Maze from "./dijkstra/Maze";
 
 const App = () => {
-  const [mazeObject, setMazeObject] = useState(new Maze(0, 0));
-  const [mazeState, setMazeState] = useState([]);
-  const [forceRender, setForceRender] = useState(false);
+  const [generateMaze, setGenerateMaze] = useState(false);
 
-  const generateMaze = () => {};
+  // fired on clicking the 'Generate Maze' Button
+  const generateMazeHandler = () => {
+    setGenerateMaze(!generateMaze);
+  };
 
   return (
     <div className="primary-container">
-      <Toolbar generateMaze={generateMaze} />
-      <MazeContainer
-        mazeState={mazeState}
-        setMazeState={setMazeState}
-        forceRender={forceRender}
-        mazeObject={mazeObject}
-        setMazeObject={setMazeObject}
-      />
+      <Toolbar generateMaze={generateMazeHandler} />
+      <MazeContainer generateMaze={generateMaze} />
     </div>
   );
 };

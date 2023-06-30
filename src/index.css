@@ -104,12 +104,13 @@
   justify-content: center;
   height: 95%;
   width: 95%;
+  padding: 2px;
 }
 
 .maze-node {
   height: 16px;
   width: 16px;
-  border: 1px solid darkblue;
+  border: 1px solid black;
 }
 
 .wall-node {
