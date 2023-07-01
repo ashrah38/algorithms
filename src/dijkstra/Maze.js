@@ -6,6 +6,8 @@ class Maze {
   constructor(width, height) {
     this.size = 0;
     this.nodes = new Map();
+    this.startNode = null;
+    this.endNode = null;
     this.visitedNodes = [];
     this.unvisitedNodes = [];
     this.mazeState = [];
@@ -15,7 +17,7 @@ class Maze {
     for (let i = 0; i < Math.floor(height / nodeLength); i++) {
       for (let j = 0; j < Math.floor(width / nodeLength); j++) {
         const newNode = new Node(i, j, id);
-        this.nodes.set(`${i}_` + `${j}`, newNode);
+        this.nodes.set(`${i}_${j}`, newNode);
         this.mazeState.push({ class: "maze-node", id: id, isWall: false });
         id += 1;
         this.size += 1;
@@ -23,8 +25,6 @@ class Maze {
         this.lastY = j;
       }
     }
-    this.allotNeighbours();
-    this.printNeighbours();
   }
 
   allotNeighbours() {
@@ -33,20 +33,24 @@ class Maze {
     for (let [key, value] of this.nodes) {
       let coords = key.split("_");
       // generate neighbour keys
-      const neighbourLeft = parseInt(coords[0]) - 1; // -1
-      const neighbourUp = parseInt(coords[1]) + 1; // +1
-      const neighbourRight = parseInt(coords[0]) + 1; // +1
-      const neighbourDown = parseInt(coords[1]) - 1; // -1
-      if (neighbourLeft >= 0) value.neighbours.push(`${coords[0]}_${parseInt(coords[1]) - 1}`);
-      if (neighbourUp <= this.lastY) value.neighbours.push(`${parseInt(coords[0]) + 1}_${coords[1]}`);
-      if (neighbourRight <= this.lastX) value.neighbours.push(`${coords[0]}_${parseInt(coords[1]) + 1}`);
-      if (neighbourDown >= 0) value.neighbours.push(`${parseInt(coords[0]) - 1}_${coords[1]}`);
+      const neighbourLeft = parseInt(coords[1]) - 1;
+      const neighbourRight = parseInt(coords[1]) + 1;
+      const neighbourUp = parseInt(coords[0]) - 1;
+      const neighbourDown = parseInt(coords[0]) + 1;
+      const coordsL = `${coords[0]}_${neighbourLeft}`; // left neighbour coords
+      const coordsR = `${coords[0]}_${neighbourRight}`; // right neighbour coords
+      const coordsU = `${neighbourUp}_${coords[1]}`; // up neighbour coords
+      const coordsD = `${neighbourDown}_${coords[1]}`; // down neibhour coords
+      if (neighbourLeft >= 0 && !this.nodes.get(coordsL).isWall) value.neighbours.push(coordsL);
+      if (neighbourRight <= this.lastY && !this.nodes.get(coordsR).isWall) value.neighbours.push(coordsR);
+      if (neighbourUp >= 0 && !this.nodes.get(coordsU).isWall) value.neighbours.push(coordsU);
+      if (neighbourDown <= this.lastX) value.neighbours.push(coordsD);
     }
   }
 
   printNeighbours() {
     for (let [key, value] of this.nodes) {
-      console.log(value.neighbours);
+      console.log(key, value.neighbours);
     }
   }
 
@@ -81,6 +85,8 @@ class Maze {
       i++;
     }
     this.assignNodes();
+    this.allotNeighbours();
+    this.printNeighbours();
     return this;
   }
 
@@ -93,15 +99,22 @@ class Maze {
     let endNodeCoords = [Math.floor(this.lastX / 2 + 3 * Math.random()), Math.floor(this.lastY / (4 / 3) + 5 * Math.random())];
     // we want to randomize this some what.
     const targetNodeS = this.nodes.get(`${startNodeCoords[0]}_${startNodeCoords[1]}`);
+    this.startNode = targetNodeS;
     targetNodeS.isStartNode = true;
     targetNodeS.isWall = false;
     this.mazeState[targetNodeS.id].isStartNode = true;
     this.mazeState[targetNodeS.id].isWall = false;
     const targetNodeE = this.nodes.get(`${endNodeCoords[0]}_${endNodeCoords[1]}`);
+    this.endNode = targetNodeE;
     targetNodeE.isEndNode = true;
     targetNodeE.isWall = false;
     this.mazeState[targetNodeE.id].isEndNode = true;
     this.mazeState[targetNodeE.id].isWall = false;
+  }
+
+  djikstra() {
+    const startNode = this.startNode;
+    const endNode = this.endNode;
   }
 }
 
