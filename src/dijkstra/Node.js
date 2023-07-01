@@ -3,6 +3,8 @@ class Node {
     this.coords = [Xval, Yval];
     this.id = id;
     this.isWall = false;
+    this.isStartNode = false;
+    this.isEndNode = false;
   }
 }
 

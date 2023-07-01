@@ -17,11 +17,12 @@ const MazeContainer = ({ generateMaze }) => {
     setMazeObject(mazeObject.generateWalls());
 
     mazeObject.mazeState.forEach((node) => {
-      setTimeout(() => {
-        const updatedState = [...mazeState];
-        if (node.isWall) updatedState[node.id].class = "wall-node maze-node";
-        setMazeState(updatedState);
-      }, 10);
+      const updatedState = [...mazeState];
+      if (node.isWall) updatedState[node.id].class = "maze-node wall-node";
+      if (node.isStartNode) updatedState[node.id].class = "maze-node start-node";
+      if (node.isEndNode) updatedState[node.id].class = "maze-node end-node";
+
+      setMazeState(updatedState);
     });
   };
 
