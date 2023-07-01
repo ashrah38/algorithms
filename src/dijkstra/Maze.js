@@ -15,7 +15,6 @@ class Maze {
     for (let i = 0; i < Math.floor(height / nodeLength); i++) {
       for (let j = 0; j < Math.floor(width / nodeLength); j++) {
         const newNode = new Node(i, j, id);
-        // this.nodes.push(newNode);
         this.nodes.set(`${i}_` + `${j}`, newNode);
         this.mazeState.push({ class: "maze-node", id: id, isWall: false });
         id += 1;
@@ -23,6 +22,31 @@ class Maze {
         this.lastX = i;
         this.lastY = j;
       }
+    }
+    this.allotNeighbours();
+    this.printNeighbours();
+  }
+
+  allotNeighbours() {
+    // every node has at most 4 neighbours
+    // a neighbour has an X value +1 and -1, and a Y-value +1 and -1
+    for (let [key, value] of this.nodes) {
+      let coords = key.split("_");
+      // generate neighbour keys
+      const neighbourLeft = parseInt(coords[0]) - 1; // -1
+      const neighbourUp = parseInt(coords[1]) + 1; // +1
+      const neighbourRight = parseInt(coords[0]) + 1; // +1
+      const neighbourDown = parseInt(coords[1]) - 1; // -1
+      if (neighbourLeft >= 0) value.neighbours.push(`${coords[0]}_${parseInt(coords[1]) - 1}`);
+      if (neighbourUp <= this.lastY) value.neighbours.push(`${parseInt(coords[0]) + 1}_${coords[1]}`);
+      if (neighbourRight <= this.lastX) value.neighbours.push(`${coords[0]}_${parseInt(coords[1]) + 1}`);
+      if (neighbourDown >= 0) value.neighbours.push(`${parseInt(coords[0]) - 1}_${coords[1]}`);
+    }
+  }
+
+  printNeighbours() {
+    for (let [key, value] of this.nodes) {
+      console.log(value.neighbours);
     }
   }
 

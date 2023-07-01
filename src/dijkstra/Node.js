@@ -5,6 +5,7 @@ class Node {
     this.isWall = false;
     this.isStartNode = false;
     this.isEndNode = false;
+    this.neighbours = [];
   }
 }
 
