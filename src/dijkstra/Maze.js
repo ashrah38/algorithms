@@ -5,7 +5,7 @@ const nodeLength = 18;
 class Maze {
   constructor(width, height) {
     this.size = 0;
-    this.nodes = [];
+    this.nodes = new Map();
     this.visitedNodes = [];
     this.unvisitedNodes = [];
     this.mazeState = [];
@@ -15,7 +15,8 @@ class Maze {
     for (let i = 0; i < Math.floor(height / nodeLength); i++) {
       for (let j = 0; j < Math.floor(width / nodeLength); j++) {
         const newNode = new Node(i, j, id);
-        this.nodes.push(newNode);
+        // this.nodes.push(newNode);
+        this.nodes.set(`${i}_` + `${j}`, newNode);
         this.mazeState.push({ class: "maze-node", id: id, isWall: false });
         id += 1;
         this.size += 1;
@@ -27,16 +28,34 @@ class Maze {
 
   // assigns the wall nodes randomly
   generateWalls() {
-    // fill all the sides, and 40% of the inner boxes
-    this.nodes.forEach((node, index) => {
-      // generate the borders
-      if (node.coords[0] === 0) this.mazeState[index].isWall = true;
-      if (node.coords[0] === this.lastX) this.mazeState[index].isWall = true;
-      if (node.coords[1] === 0) this.mazeState[index].isWall = true;
-      if (node.coords[1] === this.lastY) this.mazeState[index].isWall = true;
-      // generate walls periodically for all other boxes
-      if (Math.random() < 0.25) this.mazeState[index].isWall = true;
-    });
+    let i = 0;
+    for (let [key, value] of this.nodes) {
+      let coords = key.split("_");
+      // fill in the top bar
+      if (coords[0] === "0") {
+        this.mazeState[i].isWall = true;
+        value.isWall = true;
+      }
+      if (coords[0] === this.lastX.toString()) {
+        this.mazeState[i].isWall = true;
+        value.isWall = true;
+      }
+      if (coords[1] === "0") {
+        this.mazeState[i].isWall = true;
+        value.isWall = true;
+      }
+      if (coords[1] === this.lastY.toString()) {
+        this.mazeState[i].isWall = true;
+        value.isWall = true;
+      }
+      // generate walls periodically
+      if (Math.random() < 0.25) {
+        this.mazeState[i].isWall = true;
+        value.isWall = true;
+      }
+
+      i++;
+    }
     this.assignNodes();
     return this;
   }
@@ -49,18 +68,16 @@ class Maze {
     let startNodeCoords = [Math.floor(this.lastX / 2 + 3 * Math.random()), Math.floor(this.lastY / 4 + 5 * Math.random())];
     let endNodeCoords = [Math.floor(this.lastX / 2 + 3 * Math.random()), Math.floor(this.lastY / (4 / 3) + 5 * Math.random())];
     // we want to randomize this some what.
-    let i = 0;
-    while (JSON.stringify(this.nodes[i].coords) !== JSON.stringify(startNodeCoords)) {
-      i += 1;
-    }
-    this.mazeState[i].isStartNode = true;
-    this.mazeState[i].isWall = false;
-    i = 0;
-    while (JSON.stringify(this.nodes[i].coords) !== JSON.stringify(endNodeCoords)) {
-      i += 1;
-    }
-    this.mazeState[i].isEndNode = true;
-    this.mazeState[i].isWall = false;
+    const targetNodeS = this.nodes.get(`${startNodeCoords[0]}_${startNodeCoords[1]}`);
+    targetNodeS.isStartNode = true;
+    targetNodeS.isWall = false;
+    this.mazeState[targetNodeS.id].isStartNode = true;
+    this.mazeState[targetNodeS.id].isWall = false;
+    const targetNodeE = this.nodes.get(`${endNodeCoords[0]}_${endNodeCoords[1]}`);
+    targetNodeE.isEndNode = true;
+    targetNodeE.isWall = false;
+    this.mazeState[targetNodeE.id].isEndNode = true;
+    this.mazeState[targetNodeE.id].isWall = false;
   }
 }
 
