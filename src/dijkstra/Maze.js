@@ -1,3 +1,4 @@
+/* eslint-disable no-loop-func */
 // the Maze class creates a grid based on the dimensions of the maze container (screen size)
 import Node from "./Node";
 const nodeLength = 18;
@@ -8,11 +9,14 @@ class Maze {
     this.nodes = new Map();
     this.startNode = null;
     this.endNode = null;
-    this.visitedNodes = [];
+    this.visitedNodes = new Map();
+    this.queuedNodes = new Map();
     this.unvisitedNodes = [];
+    this.visitQueue = [];
     this.mazeState = [];
     this.lastX = 0;
     this.lastY = 0;
+    this.numWalls = 0;
     let id = 0;
     for (let i = 0; i < Math.floor(height / nodeLength); i++) {
       for (let j = 0; j < Math.floor(width / nodeLength); j++) {
@@ -44,7 +48,7 @@ class Maze {
       if (neighbourLeft >= 0 && !this.nodes.get(coordsL).isWall) value.neighbours.push(coordsL);
       if (neighbourRight <= this.lastY && !this.nodes.get(coordsR).isWall) value.neighbours.push(coordsR);
       if (neighbourUp >= 0 && !this.nodes.get(coordsU).isWall) value.neighbours.push(coordsU);
-      if (neighbourDown <= this.lastX) value.neighbours.push(coordsD);
+      if (neighbourDown <= this.lastX && !this.nodes.get(coordsD).isWall) value.neighbours.push(coordsD);
     }
   }
 
@@ -63,30 +67,34 @@ class Maze {
       if (coords[0] === "0") {
         this.mazeState[i].isWall = true;
         value.isWall = true;
+        this.numWalls++;
       }
       if (coords[0] === this.lastX.toString()) {
         this.mazeState[i].isWall = true;
         value.isWall = true;
+        this.numWalls++;
       }
       if (coords[1] === "0") {
         this.mazeState[i].isWall = true;
         value.isWall = true;
+        this.numWalls++;
       }
       if (coords[1] === this.lastY.toString()) {
         this.mazeState[i].isWall = true;
         value.isWall = true;
+        this.numWalls++;
       }
       // generate walls periodically
       if (Math.random() < 0.25) {
         this.mazeState[i].isWall = true;
         value.isWall = true;
+        this.numWalls++;
       }
 
       i++;
     }
     this.assignNodes();
     this.allotNeighbours();
-    this.printNeighbours();
     return this;
   }
 
@@ -115,6 +123,27 @@ class Maze {
   djikstra() {
     const startNode = this.startNode;
     const endNode = this.endNode;
+    let currentNode = startNode;
+    this.visitQueue.push(currentNode);
+    let i = 0;
+    while (this.visitQueue.length && i < 20000) {
+      i++;
+      this.visitedNodes.set(currentNode.id, currentNode);
+      currentNode.neighbours.forEach((nodeAddress) => {
+        const node = this.nodes.get(nodeAddress);
+        node.distance = currentNode.distance + 1;
+        if (!this.visitedNodes.get(node.id) && !this.queuedNodes.get(node.id)) this.visitQueue.push(node);
+        this.queuedNodes.set(node.id, node);
+      });
+      currentNode = this.visitQueue.shift();
+    }
+    console.log(this.queuedNodes);
+  }
+
+  visualize() {
+    console.log(this.nodes.size);
+    console.log(this.numWalls);
+    this.djikstra();
   }
 }
 

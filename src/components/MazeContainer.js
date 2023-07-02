@@ -2,9 +2,9 @@ import { React, useRef, useEffect, useState } from "react";
 import Maze from "../dijkstra/Maze";
 
 const MazeContainer = ({ generateMaze }) => {
-  const mazeRef = useRef(null);
-  const [mazeObject, setMazeObject] = useState(new Maze(0, 0));
-  const [mazeState, setMazeState] = useState([]);
+  const mazeRef = useRef(null); // reference to the maze container
+  const [mazeObject, setMazeObject] = useState(new Maze(0, 0)); // tracks the maze object
+  const [mazeState, setMazeState] = useState([]); // tracks the maze state
   // retrieve the dimensions of the maze container after first render - only fired on the first render
   useEffect(() => {
     const { width, height } = mazeRef.current.getBoundingClientRect();
@@ -26,12 +26,27 @@ const MazeContainer = ({ generateMaze }) => {
     });
   };
 
+  const visualize = () => {
+    setMazeObject(mazeObject.visualize());
+
+    mazeObject.queuedNodes.forEach((node) => {
+      setTimeout(() => {
+        if (!node.isStartNode && !node.isEndNode) {
+          const updatedState = [...mazeState];
+          updatedState[node.id].class = "maze-node visited-node";
+          setMazeState(updatedState);
+        }
+      }, 1);
+    });
+  };
+
   return (
     <div ref={mazeRef} className="maze-container">
       {mazeState.map((node) => (
         <div
           onClick={() => {
             generateWalls();
+            visualize();
           }}
           className={node.class}
           key={node.id}

@@ -6,6 +6,7 @@ class Node {
     this.isStartNode = false;
     this.isEndNode = false;
     this.neighbours = [];
+    this.distance = Infinity;
   }
 }
 
