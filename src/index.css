@@ -4,6 +4,7 @@
   --red: #e11845;
   --yellow: #f2ca19;
   --pink: #ff00bd;
+  --purple: #5a0b4d;
   --green: #87e911;
   --black: #000;
 }
@@ -75,7 +76,7 @@
 }
 
 .start-node {
-  background-color: var(--yellow);
+  background-color: var(--green);
 }
 
 .end-node {
@@ -83,11 +84,30 @@
 }
 
 .visited-node {
-  background-color: var(--pink);
+  background-color: var(--purple);
+  animation: bubbly 1s ease-in-out;
 }
 
-.walls {
+@keyframes bubbly {
+  0% {
+    transform: scale(1);
+    background-color: var(--pink);
+  }
+  50% {
+    transform: scale(1.1) rotate(5deg);
+  }
+  100% {
+    transform: scale(1) rotate(-5deg);
+  }
+}
+
+.walls,
+.wall-node {
   background-color: var(--black);
+}
+
+.path-node {
+  background-color: var(--yellow);
 }
 
 .instructions {
@@ -111,18 +131,6 @@
   height: 18px;
   width: 18px;
   border: 1px solid black;
-}
-
-.wall-node {
-  background-color: black;
-}
-
-.start-node {
-  background-color: var(--green);
-}
-
-.end-node {
-  background-color: var(--red);
 }
 
 @media (max-width: 1100px) {

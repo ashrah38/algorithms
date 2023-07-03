@@ -11,7 +11,7 @@ class Maze {
     this.endNode = null;
     this.visitedNodes = new Map();
     this.queuedNodes = new Map();
-    this.unvisitedNodes = [];
+    this.shortestPath = [];
     this.visitQueue = [];
     this.mazeState = [];
     this.lastX = 0;
@@ -29,6 +29,10 @@ class Maze {
         this.lastY = j;
       }
     }
+  }
+
+  resetGraph(width, height) {
+    return new Maze(width, height);
   }
 
   allotNeighbours() {
@@ -122,28 +126,47 @@ class Maze {
 
   djikstra() {
     const startNode = this.startNode;
-    const endNode = this.endNode;
     let currentNode = startNode;
+    currentNode.distance = 0;
+    let endLoop = false;
     this.visitQueue.push(currentNode);
-    let i = 0;
-    while (this.visitQueue.length && i < 20000) {
-      i++;
+    this.queuedNodes.set(currentNode.id, currentNode);
+    while (this.visitQueue.length) {
       this.visitedNodes.set(currentNode.id, currentNode);
+      // iterate over the neigbours
       currentNode.neighbours.forEach((nodeAddress) => {
         const node = this.nodes.get(nodeAddress);
+        // end the loop if the end node is reached
+        if (node.isEndNode) endLoop = true;
+        // update the shortest distance to start node, and the previous node value
+        if (currentNode.distance + 1 < node.distance) {
+          node.distance = currentNode.distance + 1;
+          node.previousNode = currentNode; // previous node can only be updated by a neighbour
+        }
         node.distance = currentNode.distance + 1;
         if (!this.visitedNodes.get(node.id) && !this.queuedNodes.get(node.id)) this.visitQueue.push(node);
         this.queuedNodes.set(node.id, node);
       });
       currentNode = this.visitQueue.shift();
+      if (endLoop) break;
     }
-    console.log(this.queuedNodes);
   }
 
-  visualize() {
-    console.log(this.nodes.size);
-    console.log(this.numWalls);
+  visualizeSearch() {
     this.djikstra();
+  }
+
+  findShortestPath() {
+    let currentNode = this.endNode;
+    let previousNode = currentNode.previousNode;
+    console.log(this.startNode);
+    console.log(this.endNode);
+    console.log(this.queuedNodes);
+    while (previousNode != null) {
+      this.shortestPath.push(previousNode);
+      previousNode = previousNode.previousNode;
+    }
+    this.shortestPath.reverse();
   }
 }
 

@@ -26,8 +26,8 @@ const MazeContainer = ({ generateMaze }) => {
     });
   };
 
-  const visualize = () => {
-    setMazeObject(mazeObject.visualize());
+  const visualizeSearch = () => {
+    setMazeObject(mazeObject.visualizeSearch());
 
     mazeObject.queuedNodes.forEach((node) => {
       setTimeout(() => {
@@ -36,7 +36,20 @@ const MazeContainer = ({ generateMaze }) => {
           updatedState[node.id].class = "maze-node visited-node";
           setMazeState(updatedState);
         }
-      }, 1);
+      }, 20);
+    });
+  };
+
+  const visualizePath = () => {
+    setMazeObject(mazeObject.findShortestPath());
+    mazeObject.shortestPath.forEach((node) => {
+      setTimeout(() => {
+        if (!node.isStartNode && !node.isEndNode) {
+          const updatedState = [...mazeState];
+          updatedState[node.id].class = "maze-node path-node";
+          setMazeState(updatedState);
+        }
+      }, 3000);
     });
   };
 
@@ -46,7 +59,8 @@ const MazeContainer = ({ generateMaze }) => {
         <div
           onClick={() => {
             generateWalls();
-            visualize();
+            visualizeSearch();
+            visualizePath();
           }}
           className={node.class}
           key={node.id}

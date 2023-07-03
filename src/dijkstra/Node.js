@@ -5,6 +5,7 @@ class Node {
     this.isWall = false;
     this.isStartNode = false;
     this.isEndNode = false;
+    this.previousNode = null;
     this.neighbours = [];
     this.distance = Infinity;
   }
