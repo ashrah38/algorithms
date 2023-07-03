@@ -2,18 +2,28 @@ import React from "react";
 import Button from "@mui/material/Button";
 import InfoIcon from "@mui/icons-material/Info";
 
-const Toolbar = ({ generateMaze }) => {
+const Toolbar = ({ onClickGenMaze, onClickResetMaze, onClickVisualize }) => {
   return (
     <div className="toolbar">
       <h1 className="title">Dijkstra's Algorithm</h1>
       <div className="btn-container">
-        <Button onClick={() => generateMaze()} variant="text" size="large" sx={{ color: "#fff", ":hover": { color: "#aaa" } }}>
+        <Button onClick={() => onClickGenMaze()} variant="text" size="large" sx={{ color: "#fff", ":hover": { color: "#aaa" } }}>
           Generate Maze
         </Button>
-        <Button variant="text" size="large" sx={{ color: "#fff", ":hover": { color: "#aaa" } }}>
+        <Button
+          onClick={() => onClickResetMaze()}
+          variant="text"
+          size="large"
+          sx={{ color: "#fff", ":hover": { color: "#aaa" } }}
+        >
           Reset Graph
         </Button>
-        <Button variant="text" size="large" sx={{ color: "#fff", ":hover": { color: "#aaa" } }}>
+        <Button
+          onClick={() => onClickVisualize()}
+          variant="text"
+          size="large"
+          sx={{ color: "#fff", ":hover": { color: "#aaa" } }}
+        >
           Visualize
         </Button>
       </div>

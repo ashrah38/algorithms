@@ -17,6 +17,8 @@ class Maze {
     this.lastX = 0;
     this.lastY = 0;
     this.numWalls = 0;
+    this.wallsGenerated = false;
+    this.visualizationCompleted = false;
     let id = 0;
     for (let i = 0; i < Math.floor(height / nodeLength); i++) {
       for (let j = 0; j < Math.floor(width / nodeLength); j++) {
@@ -64,6 +66,7 @@ class Maze {
 
   // assigns the wall nodes randomly
   generateWalls() {
+    if (this.wallsGenerated) return this;
     let i = 0;
     for (let [key, value] of this.nodes) {
       let coords = key.split("_");
@@ -97,6 +100,7 @@ class Maze {
 
       i++;
     }
+    this.wallsGenerated = true;
     this.assignNodes();
     this.allotNeighbours();
     return this;
@@ -150,23 +154,28 @@ class Maze {
       currentNode = this.visitQueue.shift();
       if (endLoop) break;
     }
+    return this;
   }
 
   visualizeSearch() {
+    if (!this.wallsGenerated) return this;
+    if (this.visualizationCompleted) return this;
     this.djikstra();
   }
 
   findShortestPath() {
+    if (!this.wallsGenerated) return this;
+    if (this.visualizationCompleted) return this;
     let currentNode = this.endNode;
     let previousNode = currentNode.previousNode;
-    console.log(this.startNode);
-    console.log(this.endNode);
-    console.log(this.queuedNodes);
     while (previousNode != null) {
       this.shortestPath.push(previousNode);
       previousNode = previousNode.previousNode;
     }
     this.shortestPath.reverse();
+    this.visualizationCompleted = true;
+
+    return this;
   }
 }
 
