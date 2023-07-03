@@ -174,7 +174,6 @@ class Maze {
     }
     this.shortestPath.reverse();
     this.visualizationCompleted = true;
-
     return this;
   }
 }

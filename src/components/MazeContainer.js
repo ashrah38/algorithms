@@ -30,6 +30,7 @@ const MazeContainer = ({}) => {
   };
 
   const onClickVisualize = () => {
+    if (mazeObject.visualizationCompleted) return;
     visualizeSearch();
     visualizePath();
   };
@@ -50,7 +51,6 @@ const MazeContainer = ({}) => {
 
   // initializes the animation for the dijkstra's
   const visualizeSearch = () => {
-    console.log(mazeObject);
     setMazeObject(mazeObject.visualizeSearch());
     mazeObject.queuedNodes.forEach((node) => {
       setTimeout(() => {
@@ -73,7 +73,7 @@ const MazeContainer = ({}) => {
           updatedState[node.id].class = "path-node";
           setMazeState(updatedState);
         }
-      }, 3000);
+      }, 20);
     });
   };
 
