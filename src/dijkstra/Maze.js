@@ -106,14 +106,29 @@ class Maze {
     return this;
   }
 
+  getRandomInteger(min, max) {
+    // Calculate the range of possible values
+    const range = max - min + 1;
+    // Generate a random number between 0 and range - 1
+    const randomNumber = Math.floor(Math.random() * range);
+    // Add the random number to the min value to get a number within the desired range
+    const randomInteger = min + randomNumber;
+    return randomInteger;
+  }
+
   // assigns the start and the end nodes
   assignNodes() {
     // ideally, we want the start node to be in the left middle, and the
     // end node to be in the right middle. We can play around with the coordinates
     // to achieve this.
-    let startNodeCoords = [Math.floor(this.lastX / 2 + 3 * Math.random()), Math.floor(this.lastY / 4 + 5 * Math.random())];
-    let endNodeCoords = [Math.floor(this.lastX / 2 + 3 * Math.random()), Math.floor(this.lastY / (4 / 3) + 5 * Math.random())];
-    // we want to randomize this some what.
+    let startNodeCoords = [Math.floor(this.lastX / 2 + 10 * Math.random()), Math.floor(this.lastY / 4 + 10 * Math.random())];
+    let endNodeCoords = [Math.floor(this.lastX / 2 + 10 * Math.random()), Math.floor(this.lastY / (4 / 3) + 10 * Math.random())];
+    // swap the start and end coordinates half the time.
+    if (Math.random() > 0.5) {
+      let temp = startNodeCoords;
+      startNodeCoords = endNodeCoords;
+      endNodeCoords = temp;
+    }
     const targetNodeS = this.nodes.get(`${startNodeCoords[0]}_${startNodeCoords[1]}`);
     this.startNode = targetNodeS;
     targetNodeS.isStartNode = true;
