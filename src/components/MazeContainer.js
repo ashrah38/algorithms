@@ -2,6 +2,7 @@ import { React, useRef, useEffect, useState } from "react";
 import Maze from "../dijkstra/Maze";
 import Toolbar from "./Toolbar";
 import MoreInfo from "./MoreInfo";
+import NoPathFound from "./NoPathFound";
 
 const MazeContainer = ({}) => {
   const mazeRef = useRef(null); // reference to the maze container
@@ -10,6 +11,7 @@ const MazeContainer = ({}) => {
   const [mazeState, setMazeState] = useState([]); // tracks the maze state
   const [visualizationInProgress, setVIP] = useState(false); // tracks the duration for which visualization is in progress
   const [isHovering, setIsHovering] = useState(false); // tracks whether user is hovering above the info icon
+  const [isPathFound, setIsPathFound] = useState(true); // tracks whether a path exists
 
   // retrieve the dimensions of the maze container after first render - only fired on the first render
   useEffect(() => {
@@ -95,6 +97,7 @@ const MazeContainer = ({}) => {
   return (
     <>
       <MoreInfo isHovering={isHovering} />
+      <NoPathFound isPathFound={isPathFound} />
       <Toolbar
         onClickGenMaze={onClickGenMaze}
         onClickResetMaze={onClickResetMaze}
