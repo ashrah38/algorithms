@@ -4,7 +4,7 @@ import Toolbar from "./Toolbar";
 import MoreInfo from "./MoreInfo";
 import NoPathFound from "./NoPathFound";
 
-const MazeContainer = ({}) => {
+const MazeContainer = () => {
   const mazeRef = useRef(null); // reference to the maze container
   const [mazeDimensions, setMazeDimensions] = useState([]); // stores the maze dimensions
   const [mazeObject, setMazeObject] = useState(new Maze(0, 0)); // tracks the maze object
@@ -24,11 +24,13 @@ const MazeContainer = ({}) => {
 
   // button handler for the generate maze button
   const onClickGenMaze = () => {
+    setIsPathFound(true); // hide the no path found overlay
     generateWalls();
   };
 
   // button handler for the reset maze button
   const onClickResetMaze = () => {
+    setIsPathFound(true); // hide the no path found overlay
     if (visualizationInProgress) return;
     const newMaze = new Maze(mazeDimensions[0], mazeDimensions[1]);
     setMazeObject(newMaze);
@@ -36,12 +38,14 @@ const MazeContainer = ({}) => {
   };
 
   const onClickVisualize = () => {
+    setIsPathFound(true); // hide the no path found overlay
     if (mazeObject.visualizationCompleted) return;
     visualizeSearch();
     visualizePath();
+    // controls when the reset graph button is enabled/disabled
     setTimeout(() => {
       setVIP(false);
-    }, 3000);
+    }, 1500);
   };
 
   const handleHoverEnter = () => {
@@ -83,6 +87,8 @@ const MazeContainer = ({}) => {
   const visualizePath = () => {
     if (!mazeObject.wallsGenerated) return;
     setMazeObject(mazeObject.findShortestPath());
+    // if the shortest path does not exist, then show the no path found prompt
+    if (mazeObject.noPathFound) setIsPathFound(false);
     mazeObject.shortestPath.forEach((node) => {
       setTimeout(() => {
         if (!node.isStartNode && !node.isEndNode) {

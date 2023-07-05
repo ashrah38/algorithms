@@ -17,6 +17,7 @@ class Maze {
     this.lastX = 0;
     this.lastY = 0;
     this.numWalls = 0;
+    this.noPathFound = false;
     this.wallsGenerated = false;
     this.visualizationCompleted = false;
     let id = 0;
@@ -144,13 +145,14 @@ class Maze {
   }
 
   djikstra() {
+    console.log(this.startNode);
     const startNode = this.startNode;
     let currentNode = startNode;
     currentNode.distance = 0;
     let endLoop = false;
     this.visitQueue.push(currentNode);
     this.queuedNodes.set(currentNode.id, currentNode);
-    while (this.visitQueue.length) {
+    while (currentNode !== undefined) {
       this.visitedNodes.set(currentNode.id, currentNode);
       // iterate over the neigbours
       currentNode.neighbours.forEach((nodeAddress) => {
@@ -187,6 +189,7 @@ class Maze {
       this.shortestPath.push(previousNode);
       previousNode = previousNode.previousNode;
     }
+    if (this.shortestPath.length === 0) this.noPathFound = true;
     this.shortestPath.reverse();
     this.visualizationCompleted = true;
     return this;
