@@ -7,6 +7,7 @@ const MazeContainer = ({}) => {
   const [mazeDimensions, setMazeDimensions] = useState([]); // stores the maze dimensions
   const [mazeObject, setMazeObject] = useState(new Maze(0, 0)); // tracks the maze object
   const [mazeState, setMazeState] = useState([]); // tracks the maze state
+  const [visualizationInProgress, setVIP] = useState(false);
 
   // retrieve the dimensions of the maze container after first render - only fired on the first render
   useEffect(() => {
@@ -24,6 +25,7 @@ const MazeContainer = ({}) => {
 
   // button handler for the reset maze button
   const onClickResetMaze = () => {
+    if (visualizationInProgress) return;
     const newMaze = new Maze(mazeDimensions[0], mazeDimensions[1]);
     setMazeObject(newMaze);
     setMazeState(newMaze.mazeState);
@@ -33,6 +35,9 @@ const MazeContainer = ({}) => {
     if (mazeObject.visualizationCompleted) return;
     visualizeSearch();
     visualizePath();
+    setTimeout(() => {
+      setVIP(false);
+    }, 3000);
   };
 
   // generates the walls on the maze - unanimated
@@ -51,6 +56,7 @@ const MazeContainer = ({}) => {
 
   // initializes the animation for the dijkstra's
   const visualizeSearch = () => {
+    setVIP(true);
     setMazeObject(mazeObject.visualizeSearch());
     mazeObject.queuedNodes.forEach((node) => {
       setTimeout(() => {
