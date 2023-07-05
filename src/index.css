@@ -7,6 +7,8 @@
   --purple: #5a0b4d;
   --green: #87e911;
   --black: #000;
+  --beige: #f7e8d4;
+  --lpurple: #aa46ba;
 }
 
 * {
@@ -153,6 +155,37 @@
   background-color: white;
 }
 
+.more-info-popup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  z-index: 1000;
+  top: 7%;
+  right: 3%;
+  display: flex;
+  width: 20%;
+  height: auto;
+  padding: 1rem;
+  background: var(--lpurple);
+  border: none;
+  border-radius: 10px;
+}
+
+.more-info-popup p {
+  color: white;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.hide {
+  display: none;
+}
+
+/* media queries */
 @media (max-width: 1100px) {
   .title {
     border: none;

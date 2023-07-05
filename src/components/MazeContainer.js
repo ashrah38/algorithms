@@ -1,13 +1,15 @@
 import { React, useRef, useEffect, useState } from "react";
 import Maze from "../dijkstra/Maze";
 import Toolbar from "./Toolbar";
+import MoreInfo from "./MoreInfo";
 
 const MazeContainer = ({}) => {
   const mazeRef = useRef(null); // reference to the maze container
   const [mazeDimensions, setMazeDimensions] = useState([]); // stores the maze dimensions
   const [mazeObject, setMazeObject] = useState(new Maze(0, 0)); // tracks the maze object
   const [mazeState, setMazeState] = useState([]); // tracks the maze state
-  const [visualizationInProgress, setVIP] = useState(false);
+  const [visualizationInProgress, setVIP] = useState(false); // tracks the duration for which visualization is in progress
+  const [isHovering, setIsHovering] = useState(false); // tracks whether user is hovering above the info icon
 
   // retrieve the dimensions of the maze container after first render - only fired on the first render
   useEffect(() => {
@@ -38,6 +40,13 @@ const MazeContainer = ({}) => {
     setTimeout(() => {
       setVIP(false);
     }, 3000);
+  };
+
+  const handleHoverEnter = () => {
+    setIsHovering(true);
+  };
+  const handleHoverLeave = () => {
+    setIsHovering(false);
   };
 
   // generates the walls on the maze - unanimated
@@ -85,7 +94,14 @@ const MazeContainer = ({}) => {
 
   return (
     <>
-      <Toolbar onClickGenMaze={onClickGenMaze} onClickResetMaze={onClickResetMaze} onClickVisualize={onClickVisualize} />
+      <MoreInfo isHovering={isHovering} />
+      <Toolbar
+        onClickGenMaze={onClickGenMaze}
+        onClickResetMaze={onClickResetMaze}
+        onClickVisualize={onClickVisualize}
+        handleHoverEnter={handleHoverEnter}
+        handleHoverLeave={handleHoverLeave}
+      />
       <div ref={mazeRef} className="maze-container">
         {mazeState.map((node) => (
           <div className={node.class} key={node.id}></div>

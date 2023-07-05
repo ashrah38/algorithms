@@ -2,7 +2,7 @@ import React from "react";
 import Button from "@mui/material/Button";
 import InfoIcon from "@mui/icons-material/Info";
 
-const Toolbar = ({ onClickGenMaze, onClickResetMaze, onClickVisualize }) => {
+const Toolbar = ({ onClickGenMaze, onClickResetMaze, onClickVisualize, handleHoverEnter, handleHoverLeave }) => {
   return (
     <div className="toolbar">
       <h1 className="title">Dijkstra's Algorithm</h1>
@@ -50,7 +50,12 @@ const Toolbar = ({ onClickGenMaze, onClickResetMaze, onClickVisualize }) => {
         </div>
       </div>
       <div className="instructions">
-        <InfoIcon size="large" sx={{ color: "#fff", ":hover": { color: "#aaa", cursor: "pointer" } }}></InfoIcon>
+        <InfoIcon
+          onMouseEnter={handleHoverEnter}
+          onMouseLeave={handleHoverLeave}
+          size="large"
+          sx={{ color: "#fff", ":hover": { color: "#aaa", cursor: "pointer" } }}
+        ></InfoIcon>
       </div>
     </div>
   );
